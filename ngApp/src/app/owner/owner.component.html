@@ -1,0 +1,196 @@
+<div class="card-body cb-pd-btm">
+
+  <h2>Панель учредителя</h2>
+
+  <div class="jumbotron jumbotron-pd-0 white-block gr-border cst-box">
+    <h5 class="card-header">Назначить/снять администратора</h5>
+    <div class="card-body">
+      <form class="form">
+        <div class="form-group">
+          <label for="">Логин</label>
+          <input [(ngModel)]="login" name="login" type="text" class="form-control rounded-0" required>
+        </div>
+        <div class="form-group">
+          <label for="">Роль</label>
+          <select class="form-control form-control-sm">
+            <option value="moderator">moderator &mdash; проводит модерацию пользовательских данных</option>
+            <option value="whitelister">whitelister &mdash; добавление пользовательей в белый список</option>
+            <option value="locker">locker &mdash; блокирует и разблокирует токены по адресу</option>
+            <option value="corrector">locker &mdash; переводит и "сжигает" заблокировнные токены</option>
+            <option value="superuser">superuser &mdash; переводит на свой адрес эфир и токены</option>
+          </select>
+        </div>
+        <div class="" style="text-align: right;">
+          <button (click)="addVallet()" class="btn btn-success mt-2 col-md-2 col-sm-12" style="margin-right: 10px;">
+            Назначить
+          </button>
+          <button (click)="addVallet()" class="btn btn-danger mt-2 col-md-2 col-sm-12">
+            Снять
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="jumbotron jumbotron-pd-0 white-block gr-border cst-box">
+    <h5 class="card-header">Список администраторов</h5>
+    <div class="card-body">
+      <ul class="list-group">
+        <span *ngFor="let admin of admins">
+          <li class="list-group-item cst-list">
+            <span>
+              <span class="cst-sm">Логин:</span> {{admin.login}}
+            </span>
+            <span>
+              <span class="cst-sm">Роль:</span> {{admin.role}}
+            </span>
+            <span>
+              <span class="cst-sm">Имя:</span> {{admin.name}}
+            </span>
+            <span>
+              <span class="cst-sm">Телефон:</span> {{admin.phone}}
+            </span>
+            <span>
+              <span class="cst-sm">Почта:</span> {{admin.email}}
+            </span>
+          </li>
+        </span>
+      </ul>
+    </div>
+  </div>
+
+  <div class="jumbotron jumbotron-pd-0 white-block gr-border cst-box">
+    <h5 class="card-header">Список пайщиков, прошедших модерацию</h5>
+    <div class="card-body">
+      <ul class="list-group">
+      <span *ngFor="let user of users">
+        <li class="list-group-item cst-list">
+          <span>
+            <span class="cst-sm">Логин:</span> {{user.login}}
+          </span>
+          <span>
+            <span class="cst-sm">Имя:</span> {{user.name}}
+          </span>
+          <span>
+            <span class="cst-sm">Почта:</span> {{user.email}}
+          </span>
+        </li>
+      </span>
+      </ul>
+    </div>
+  </div>
+
+  <div class="jumbotron jumbotron-pd-0 white-block gr-border cst-box">
+    <h5 class="card-header">Старая панель</h5>
+    <div class="card-body">
+
+      <div class="alert alert-success alert-dismissible fade show" *ngIf="showMessage" role="alert">
+        <strong></strong> {{message}}
+        <button (click)="showMessageFalse();" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="alert alert-info alert-dismissible fade show" *ngIf="showTx" role="alert">
+        <strong></strong><a href="https://ropsten.etherscan.io/tx/{{txHash}}" target="blank">  {{txHash}}  </a>
+        <button (click)="showTxFalse();" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="jumbotron-pd jumbotron-pd-1 gr-border">
+        Ваш адрес: {{yourAddr}}<br>
+        Адрес Owner: {{ownerAddr}}
+      </div>
+
+      <div class="jumbotron-pd jumbotron-pd-1 cb-pd-btm gr-border">
+        <form class="form">
+          <div class="form-group">
+            <label>Права на контракт (TransferOwnership)</label>
+            <input #newOwnerAddr type="text" class="form-control form-control-sm" placeholder="Адрес нового владельца">
+          </div>
+          <div class="form-group fg-r">
+            <button (click)="transferOwnership(newOwnerAddr.value)" class="btn btn-secondary btn-sm col-md-2 col-sm-12">
+              Передать
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="jumbotron-pd jumbotron-pd-1 cb-pd-btm gr-border">
+        <form class="form">
+          <div class="form-group">
+            <label>Проверка адреса на права SuperUser (isSuperuser)</label>
+            <input #isSuperuserAddr type="text" class="form-control form-control-sm" placeholder="Адрес для проверки">
+          </div>
+          <div class="form-group fg-r">
+            <button (click)="isSuperuser(isSuperuserAddr.value)" class="btn btn-secondary btn-sm col-md-2 col-sm-12">
+              Проверить
+            </button>
+          </div>
+        </form>
+      </div>
+
+
+      <div class="form-group">
+        <label>hasRole (проверка адреса на указанные права)</label>
+        <input #hasRoleAddr type="text" class="form-control form-control-sm" placeholder="Адрес для проверки">
+        <select #hasRoleName class="form-control form-control-sm">
+          <option value="superuser">superuser - переводит на свой адрес эфир и токены потерянных кошельков</option>
+          <option value="whitelister">whitelister - добавляемт и удаляет из белого списка</option>
+          <option value="locker">locker - может разблокировать и заблокировать токены на адресе</option>
+          <option value="corrector">corrector - переводит или сжигает заблокированные токены</option>
+        </select>
+        <button (click)="hasRole(hasRoleAddr.value, hasRoleName.value)" class="btn btn-secondary btn-sm">
+          Проверить адрес на наличие прав
+        </button>
+      </div>
+      <div class="form-group">
+        <label>adminAddRole (добавить адресу права)</label>
+        <input #adminAddRoleAddr type="text" class="form-control form-control-sm" placeholder="Адрес получателя прав">
+        <select #adminAddRoleName class="form-control form-control-sm">
+          <option value="superuser">superuser</option>
+          <option value="whitelister">whitelister</option>
+          <option value="locker">locker</option>
+          <option value="corrector">corrector</option>
+        </select>
+        <button (click)="adminAddRole(adminAddRoleAddr.value, adminAddRoleName.value)" class="btn btn-secondary btn-sm">
+          Уставновить права на адрес <!-- {{adminAddRoleName.value}} -->
+        </button>
+      </div>
+      <div class="form-group">
+        <label>adminRemoveRole (удалить права)</label>
+        <input #adminRemoveRoleAddr type="text" class="form-control form-control-sm" placeholder="Адрес владельца прав">
+        <select #adminRemoveRoleName class="form-control form-control-sm">
+          <option value="superuser">superuser</option>
+          <option value="whitelister">whitelister</option>
+          <option value="locker">locker</option>
+          <option value="corrector">corrector</option>
+        </select>
+        <button (click)="adminRemoveRole(adminRemoveRoleAddr.value, adminRemoveRoleName.value)" class="btn btn-secondary btn-sm">
+          Удалить права на адресе <!-- {{adminRemoveRoleName.value}} -->
+        </button>
+      </div>
+      <div class="form-group">
+        <label>getEther</label>
+        <input #valueWei type="text" class="form-control form-control-sm" placeholder="Укажите количество Ether в Wei (1 Eth = 1*10^18 Wei)">
+        <button (click)="getEther(valueWei.value)" class="btn btn-secondary btn-sm">
+          Перевести Ether с контракта на адрес Owner
+        </button>
+      </div>
+      <div class="form-group">
+        <label>correctOffers</label>
+        <input #correctOffersAddr type="text" class="form-control form-control-sm" placeholder="Укажите адрес утраченного кошелька">
+        <button (click)="correctOffers(correctOffersAddr.value)" class="btn btn-secondary btn-sm">
+          Перевести Ether и Tokens на адрес SuperUser
+        </button>
+      </div>
+
+    </div>
+
+
+
+
+  </div>
+
+</div>

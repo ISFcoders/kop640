@@ -1,0 +1,195 @@
+<div class="card-body cb-pd-btm">
+
+  <h2>Пайщик/участник</h2>
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+    <p *ngIf="!checked">
+      Учетная запись <b>{{login}}</b> является <b>анонимной</b> и не участвует в процедуре начисления бонусов.<br>Требуется пройти модерацию.
+    </p>
+    <p *ngIf="checked">
+      Учетная запись <b>{{login}}</b> прошла модерацию и может участвовать в процедуре начисления бонусов.<br>Можно редактировать блок с персональной информацией.
+    </p>
+  </div>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+    <button *ngIf="checked" (click)="editInfo()" class="btn btn-link float-right mt-2">
+      Редактировать
+    </button>
+    <h5>Персональная информация</h5>
+
+    <br>
+    <p>ФИО пайщика: {{name}}</p>
+    <p>Телефон: {{phone}}</p>
+    <p>Электронная почта: {{email}}</p>
+
+  </div>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+    <h5>Добавить кошелек/счет</h5>
+    <br>
+    <form class="form">
+      <div class="form-group">
+        <label>Номер</label>
+        <input [(ngModel)]="vallet" name="vallet" type="text" class="form-control rounded-0" required>
+      </div>
+      <button (click)="addVallet()" class="btn btn-primary float-right mt-2">
+        Добавить
+      </button>
+    </form>
+    <p><b>Внимание!</b> Учетная запись перестает участвовать в процедуре начисления бонусов, когда в ней подключено более одного счета.</p>
+  </div>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+    <button (click)="editVallets()" class="btn btn-link float-right mt-2">
+      Редактировать
+    </button>
+    <h5>Подключенные кошельки/счета</h5>
+    <br>
+    <ol>
+    <span *ngFor="let vallet of vallets">
+      <li class="card-title">{{vallet}}</li>
+    </span>
+    </ol>
+
+  </div>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+    <div class="alert alert-success alert-dismissible fade show" *ngIf="showMessage" role="alert">
+      <strong></strong> {{message}}
+      <button (click)="showMessageFalse();" type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="alert alert-info alert-dismissible fade show" *ngIf="showTx" role="alert">
+      <strong></strong><a href="https://ropsten.etherscan.io/tx/{{txHash}}" target="blank">  {{txHash}}  </a>
+      <button (click)="showTxFalse();" type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+  </div>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          usercontract works! <br>
+          <span *ngIf="listRolesLength !== 0">Ваши права: {{listRoles}} <br></span>
+          Ваш адрес кошелька: {{yourAccount}} <br>
+          Кол-во токенов: {{yourBalance}} ({{symbolToken}}) <br>
+          Кол-во эфира: {{yourBalanceEther}} (Ether)
+        </div>
+        <div class="col-sm">
+          <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{yourAccount}}&choe=UTF-8" alt="QR">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+    <div class="form-group">
+      <label>GetBalanceOfBlock</label>
+      <input #blockNumber type="text" class="form-control form-control-sm" placeholder="Номер блока">
+      <button (click)="getBalanceOfBlock(yourAccount, blockNumber.value);" class="btn btn-secondary btn-sm">
+        Узнать баланс (по блоку)
+      </button>
+    </div>
+  </div>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+    <h2>Биржа</h2>
+    <!-- <app-chartcontract></app-chartcontract> -->
+    app-chartcontract
+  </div>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+  <div class="form-group">
+    <label>Offer to Sell</label>
+    <input #valueToSell type="text" class="form-control form-control-sm" placeholder="Кол-во токенов на продажу (ЛОТ)">
+    <input #priceToSell type="text" class="form-control form-control-sm" placeholder="Цена лота в Wei">
+    <div class="btn-group btn-group-sm" role="group" aria-label="...">
+      <button (click)="offerToSell(valueToSell.value, priceToSell.value);" class="btn btn-secondary btn-sm">
+        Выставить на продажу
+      </button>
+      <button (click)="cancelOfferSell();" class="btn btn-secondary btn-sm">
+        Отменить предложение
+      </button>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-sm table-dark">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Действие</th>
+        <th scope="col">Адрес продавца токенов</th>
+        <th scope="col">Кол-во токенов (лот)</th>
+        <th scope="col">Цена лота в Ether</th>
+        <th scope="col">Котировка в Ether</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of allOffersToSell; let i = index">
+        <th scope="row">{{i+1}}</th>
+        <td><button  *ngIf="item[0] !== yourAccount" (click)="dealOfferToSell(item[0], item[1], item[2])" class="btn btn-primary btn-sm">Купить Токены</button></td>
+        <td>{{ item[0] }}</td>
+        <td>{{ item[1] }}</td>
+        <td>{{ item[2] / (1000000000000000000) }}</td>
+        <td>{{ item[2] / item[1] / (1000000000000000000)}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="form-group">
+    <label>Offer to Buy</label>
+    <input #valueToBuy type="text" class="form-control form-control-sm" placeholder="Запрос кол-ва токенов на приобретение (ЛОТ)">
+    <input #priceToBuy type="text" class="form-control form-control-sm" placeholder="Цена лота в Wei">
+    <div class="btn-group btn-group-sm" role="group" aria-label="...">
+      <button (click)="offerToBuy(valueToBuy.value, priceToBuy.value);" class="btn btn-secondary btn-sm">
+        Объявить о спросе
+      </button>
+      <button (click)="cancelOfferBuy();" class="btn btn-secondary btn-sm">
+        Отменить предложение
+      </button>
+    </div>
+  </div>
+    <div class="table-responsive">
+      <table class="table table-sm table-dark">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Действие</th>
+          <th scope="col">Адрес покупателя токенов</th>
+          <th scope="col">Кол-во токенов (лот)</th>
+          <th scope="col">Цена лота в Ether</th>
+          <th scope="col">Котировка в Ether</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of allOffersToBuy; let i = index">
+          <th scope="row">{{i+1}}</th>
+          <td><button *ngIf="item[0] !== yourAccount" (click)="dealOfferToBuy(item[0], item[1])" class="btn btn-primary btn-sm">Продать Токены</button></td>
+          <td>{{ item[0] }}</td>
+          <td>{{ item[1] }}</td>
+          <td>{{ item[2] / (1000000000000000000) }}</td>
+          <td>{{ item[2] / item[1] / (1000000000000000000)}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    - Профиль пользователя <br>
+    ....... <br>
+    ....... <br>
+    Блок управления кошельками: <br>
+    (кнопка добавить кошелек) <br>
+    - Кол-во паев на кшельке 0х0001 (кнопка перевести) <br>
+    - Кол-во паев на кшельке 0х0002 (кнопка перевести) <br>
+    ....... <br>
+    ....... <br>
+    Статистика торгов <br>
+
+    ....... <br>
+    FAQ (Инструкции) <br>
+
+  </div>
+
+</div>

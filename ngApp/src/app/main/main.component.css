@@ -1,0 +1,15 @@
+.white-block {
+  background-color: white;
+}
+.gr-border {
+  border: 1px solid #dadada;
+}
+.jumbotron-pd {
+  padding: 2rem 2rem;
+}
+.jumbotron-mg-last {
+  margin-bottom: 0 !important;
+}
+.cb-pd-btm {
+  padding-bottom: 0 !important;
+}

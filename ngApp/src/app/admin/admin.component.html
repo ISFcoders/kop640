@@ -1,0 +1,133 @@
+<div class="card-body cb-pd-btm">
+
+  <h2>Панель администратора</h2>
+
+  <div class="jumbotron jumbotron-pd white-block gr-border">
+
+      <div class="alert alert-success alert-dismissible fade show" *ngIf="showMessage" role="alert">
+        <strong></strong> {{message}}
+        <button (click)="showMessageFalse();" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="alert alert-info alert-dismissible fade show" *ngIf="showTx" role="alert">
+        <strong></strong><a href="https://ropsten.etherscan.io/tx/{{txHash}}" target="blank">  {{txHash}}  </a>
+        <button (click)="showTxFalse();" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="jumbotron">
+        admincontract works! <br>
+        <span *ngIf="listRolesLength !== 0">Ваши права: {{listRoles}} <br></span>
+        Ваш адрес кошелька: {{yourAccount}}
+      </div>
+      <div class="form-group">
+        <label>GetInfo from address</label>
+        <input #addressOf type="text" class="form-control form-control-sm" placeholder="Введите адрес кошелька...">
+        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+          <button (click)="balanceOf(addressOf.value)" class="btn btn-secondary btn-sm">
+            GetBalance
+          </button>
+          <button (click)="lockedtokensOf(addressOf.value)" class="btn btn-secondary btn-sm">
+            GetLockedTokens
+          </button>
+          <button (click)="notesOf(addressOf.value)" class="btn btn-secondary btn-sm">
+            GetNotes
+          </button>
+          <button (click)="depositsOf(addressOf.value)" class="btn btn-secondary btn-sm">
+            GetDeposits
+          </button>
+          <button (click)="whitelist(addressOf.value)" class="btn btn-secondary btn-sm">
+            GetWhitelistStatus
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Allowance</label>
+        <input #addressOwner type="text" class="form-control form-control-sm" placeholder="Адрес владельца счета">
+        <input #addressSpender type="text" class="form-control form-control-sm" placeholder="Адрес того кто тратит">
+        <button (click)="allowance(addressOwner.value, addressSpender.value)" class="btn btn-secondary btn-sm">
+          Allowance
+        </button>
+      </div>
+      <div class="form-group">
+        <label>Transfer tokens</label>
+        <input #transferTokensAddr type="text" class="form-control form-control-sm" placeholder="Адрес получателя">
+        <input #transferTokensValue type="text" class="form-control form-control-sm" placeholder="Кол-во токенов">
+        <button (click)="transfer(transferTokensAddr.value, transferTokensValue.value)" class="btn btn-secondary btn-sm">
+          Transfer Tokens
+        </button>
+      </div>
+      <div class="form-group">
+        <label>TransferFrom tokens</label>
+        <input #transferTokensAddrFrom type="text" class="form-control form-control-sm" placeholder="Адрес отправителя">
+        <input #transferTokensAddrFromTo type="text" class="form-control form-control-sm" placeholder="Адрес получателя">
+        <input #transferTokensValueFrom type="text" class="form-control form-control-sm" placeholder="Кол-во токенов">
+        <button (click)="transferFrom(
+      transferTokensAddrFrom.value,
+      transferTokensAddrFromTo.value,
+      transferTokensValueFrom.value);" class="btn btn-secondary btn-sm">
+          TransferFrom Tokens
+        </button>
+      </div>
+      <div class="form-group">
+        <label>Approve/Increase/Decrease</label>
+        <input #addressApprove type="text" class="form-control form-control-sm" placeholder="Адрес доверенного">
+        <input #valueApprove type="text" class="form-control form-control-sm" placeholder="Кол-во токенов">
+        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+          <button (click)="approve(addressApprove.value, valueApprove.value);" class="btn btn-secondary btn-sm">
+            Approve
+          </button>
+          <button (click)="increaseApproval(addressApprove.value, valueApprove.value);" class="btn btn-secondary btn-sm">
+            IncreaseApproval
+          </button>
+          <button (click)="decreaseApproval(addressApprove.value, valueApprove.value);" class="btn btn-secondary btn-sm">
+            DecreaseApproval
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Add and Remove WhiteList</label>
+        <input #addressWhitelist type="text" class="form-control form-control-sm" placeholder="Адрес кошелька">
+        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+          <button (click)="addAddressToWhitelist(addressWhitelist.value);" class="btn btn-secondary btn-sm">
+            Add WhiteList
+          </button>
+          <button (click)="removeAddressFromWhitelist(addressWhitelist.value);" class="btn btn-secondary btn-sm">
+            Remove WhiteList
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Lock/UnLock Tokens</label>
+        <input #addressLock type="text" class="form-control form-control-sm" placeholder="Адрес кошелька">
+        <input #valueLock type="text" class="form-control form-control-sm" placeholder="Кол-во токенов для блокировки">
+        <input #txtLock type="text" class="form-control form-control-sm" placeholder="Комментарий">
+        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+          <button (click)="lockTokens(addressLock.value, valueLock.value, txtLock.value);" class="btn btn-secondary btn-sm">
+            Lock
+          </button>
+          <button (click)="unLockTokens(addressLock.value, valueLock.value, txtLock.value);" class="btn btn-secondary btn-sm">
+            UnLock
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Move/Burn Tokens</label>
+        <input #addressMoveBurnFrom type="text" class="form-control form-control-sm" placeholder="Адрес заблокированных токенов">
+        <input #addressMoveTo type="text" class="form-control form-control-sm" placeholder="Адрес нового получателя">
+        <input #valueMoveBurn type="text" class="form-control form-control-sm" placeholder="Кол-во токенов">
+        <input #txtMoveBurn type="text" class="form-control form-control-sm" placeholder="Комментарий">
+        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+          <button (click)="moveTokens(addressMoveBurnFrom.value, addressMoveTo.value, valueMoveBurn.value, txtMoveBurn.value)" class="btn btn-secondary btn-sm">
+            Move
+          </button>
+          <button (click)="burnTokens(addressMoveBurnFrom.value, valueMoveBurn.value, txtMoveBurn.value)" class="btn btn-secondary btn-sm">
+            Burn
+          </button>
+        </div>
+      </div>
+
+  </div>
+
+</div>

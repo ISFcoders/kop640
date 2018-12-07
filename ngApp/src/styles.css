@@ -1,0 +1,5 @@
+.bg-img {
+  background-image: url('./assets/light-live-background-css.jpg');
+  background-position: 5px;
+  background-attachment: fixed;
+}
