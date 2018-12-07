@@ -46,35 +46,124 @@ router.get('/', (req, res) => {
 
 router.post('/register', (req, res) => {
    let userData = req.body;
-   let user = new User(userData);
-   user.save((error, registeredUser) => {
-       if (error) {
-           console.log(error);
-       } else {
-           let payload = { subject: registeredUser._id };
-           let token = jwt.sign(payload, config['token']['secretkey']);
-           res.status(200).send({token});
-       }
+   let reqUser = new User(userData);
+   reqUser = User.initUser(reqUser);
+   console.log('user:' + reqUser);
+
+   User.find({login: reqUser.login}, (err, user) => {
+      if (err) {
+          console.log(err);
+      } else {
+          console.log('user: ' + user);
+          console.log('length: ' + Object.keys(user).length);
+          if (Object.keys(user).length === 0) {
+              console.log('Find no users with login: ' + reqUser.login);
+              reqUser.save((error, registeredUser) => {
+                  if (error) {
+                      console.log(error);
+                  } else {
+                      console.log('Create user: ' + reqUser.login);
+                      let payload = { subject: registeredUser._id };
+                      let token = jwt.sign(payload, config['token']['secretkey']);
+                      res.status(200).send({token});
+                  }
+              });
+          } else {
+              console.log('There is user with login ' + reqUser.login + ' in database');
+              res.status(401).send('User exists');
+          }
+      }
    });
 });
 
 router.post('/login', (req, res) => {
    let userData = req.body;
-   User.findOne({email: userData.email}, (error, user) => {
+   User.findOne({login: userData.login}, (error, user) => {
        if (error) {
            console.log(error);
        } else {
            if (!user) {
-               res.status(401).send('Invalid email');
+               res.status(401).send('Invalid login or password');
            } else if (user.password !== userData.password) {
-               res.status(401).send('Invalid password');
+               res.status(401).send('Invalid login or password');
            } else {
                let payload = { subject: user._id };
                let token = jwt.sign(payload, config['token']['secretkey']);
-               res.status(200).send({token});
+               res.status(200).send({
+                   token,
+                   login: user.login,
+                   admin: user.adminstate ? "true" : "false",
+                   owner: user.owner ? "true" : "false"
+               });
            }
        }
    });
+});
+
+router.post('/user', (req, res) => {
+    let userData = req.body;
+    console.log('/api/user: login=' + userData.login);
+    User.findOne({login: userData.login}, (error, user) => {
+        if (error) {
+            console.log(error);
+        } else {
+            if (!user) {
+                res.status(401).send('Invalid login');
+            } else {
+                res.status(200).send({
+                    email: user.email,
+                    name: user.name,
+                    phone: user.phone,
+                    vallets: user.vallets,
+                    userstate: user.usercheck ? 'checked' : 'uncheked'
+                });
+            }
+        }
+    });
+});
+
+router.post('/adminlist', (req, res) => {
+    console.log('adminlist by owner');
+    User.find({adminstate: true}, (error, users) => {
+        if (error) {
+            console.log(error);
+        } else {
+            let userMass = [];
+            users.forEach(function(user) {
+               userMass[userMass.length] = {
+                   login: user.login,
+                   role: user.adminrole,
+                   phone: user.phone,
+                   name: user.name,
+                   email: user.email
+               };
+            });
+            res.status(200).send({
+                list: userMass
+            });
+        }
+    })
+});
+
+router.post('/userslist', (req, res) => {
+    console.log('userslist by owner');
+    User.find({usercheck: true}, (error, users) => {
+        if (error) {
+            console.log(error);
+        } else {
+            let userMass = [];
+            users.forEach(function(user) {
+                userMass[userMass.length] = {
+                    login: user.login,
+                    name: user.name,
+                    email: user.email
+                };
+            });
+            res.status(200).send({
+                list: userMass
+            });
+        }
+    })
 });
 
 router.get('/events', (req, res) => {

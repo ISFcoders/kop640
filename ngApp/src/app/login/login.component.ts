@@ -9,7 +9,9 @@ import { AuthService} from "../auth.service";
 })
 export class LoginComponent implements OnInit {
 
-  loginUserData = {}
+  invalidLoginOrPassword = false;
+  loginUserData = { };
+
   constructor(private _auth: AuthService,
               private _router: Router) { }
 
@@ -17,13 +19,41 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser() {
+    this.invalidLoginOrPassword = false;
+    console.log(this.loginUserData);
     this._auth.loginUser(this.loginUserData)
       .subscribe(
         res => {
+          this.invalidLoginOrPassword = false;
           localStorage.setItem('token', res.token);
-          this._router.navigate(['/special']);
+
+          console.log('login:' + res.login);
+          localStorage.setItem('login', res.login);
+
+          console.log('admin:' + res.admin);
+          if (res.admin === 'true') {
+            localStorage.setItem('admin', res.admin);
+          } else {
+            localStorage.setItem('admin', '');
+          }
+
+          console.log('owner:' + res.owner);
+          if (res.owner === 'true') {
+            localStorage.setItem('owner', res.owner);
+          } else {
+            localStorage.setItem('owner', '');
+          }
+
+          this._router.navigate(['/main']);
         },
-        err => console.log(err)
+        err => {
+          if (err.status === 401) {
+            if (err.error === "Invalid login or password") {
+              this.invalidLoginOrPassword = true;
+            }
+          }
+          console.log(err);
+        }
       )
   }
 

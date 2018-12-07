@@ -50,3 +50,5 @@ server/configs/server\.json
 server/package-lock\.json
 
 ngApp/package-lock\.json
+
+ngApp/dist/

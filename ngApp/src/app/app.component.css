@@ -4,3 +4,9 @@
 .bg-dark {
   background: rgba(0, 0, 0, 0.8) !important;
 }
+.bg-transparent {
+  background-color: transparent;
+}
+.navbar-nav > a.ptr {
+  cursor: pointer;
+}
