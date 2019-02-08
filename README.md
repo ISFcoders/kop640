@@ -1,6 +1,6 @@
-6040v1
+# Cooperative 6/40
 
-## Backend side:
+## Backend side
 ##### server/   
 `$ cd server`  
 `$ node server`
@@ -22,7 +22,7 @@ Configuration file: configs/server.json
 }
 ```
 
-## Frontend side: 
+## Frontend side
 ##### ngApp/  
 `$ cd ngApp`    
 `$ ng serve` 
