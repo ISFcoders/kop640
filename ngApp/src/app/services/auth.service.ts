@@ -1,28 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ConfigService } from "./config.service";
+import { ConfigAuthService } from "./config/config.auth.service";
 
 @Injectable()
 export class AuthService {
 
-  private readonly _registerUrl;
-  private readonly _loginUrl;
+  private readonly _urls;
 
   constructor(private http: HttpClient,
               private _router: Router,
-              private _config: ConfigService) {
+              private _config: ConfigAuthService) {
 
-    this._registerUrl = this._config.getRegisterUrl();
-    this._loginUrl = this._config.getLoginUrl();
+    this._urls = this._config.getUrls();
   }
 
   registerUser(user) {
-    return this.http.post<any>(this._registerUrl, user);
+    return this.http.post<any>(this._urls["register"], user);
   }
 
   loginUser(user) {
-    return this.http.post<any>(this._loginUrl, user);
+    return this.http.post<any>(this._urls["login"], user);
   }
 
   logoutUser() {

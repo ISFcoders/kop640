@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MainService } from "../services/main.service";
 
 @Component({
   selector: 'app-main',
@@ -11,8 +12,9 @@ export class MainComponent implements OnInit {
   public decimals: number;
   public addressContract: string;
   public balanceEtherContract: number;
+  public datatab: string
 
-  constructor() { }
+  constructor(private _mainService: MainService) { }
 
   ngOnInit() {
     this.name = 'NAME';
@@ -20,5 +22,18 @@ export class MainComponent implements OnInit {
     this.decimals = 0;
     this.addressContract = '0x000';
     this.balanceEtherContract = 0;
+
+    this.datatab = '_';
+    this._mainService.getData()
+      .subscribe(
+        res => {
+          this.datatab = "";
+          res.list.forEach(elem => {
+            this.datatab += elem.data + " ";
+          });
+
+        },
+        err => console.log(err)
+      );
   }
 }
