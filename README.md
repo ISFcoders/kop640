@@ -30,7 +30,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).  
     
 MEAN Stack:
-- MongoDB &mdash; Storing data
-- Express &mdash; REST APIs
-- Angular &mdash; Frontend
-- Node &mdash; Execution environment
+- `MongoDB` &mdash; Storing data
+- `Express` &mdash; REST APIs
+- `Angular` &mdash; Frontend
+- `Node.js` &mdash; Execution environment
