@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { OwnerService } from "../owner.service";
-import { EthcontractService } from '../ethcontract.service';
+import { OwnerService } from "../services/owner.service";
+import { EthcontractService } from '../services/ethcontract/ethcontract.service';
 
 @Component({
   selector: 'app-owner',
@@ -9,8 +9,8 @@ import { EthcontractService } from '../ethcontract.service';
 })
 export class OwnerComponent implements OnInit {
 
-  admins = [];
-  users = [];
+  private admins = [];
+  private users = [];
 
   public ownerAddr: number;
   public yourAddr: string;
@@ -19,7 +19,9 @@ export class OwnerComponent implements OnInit {
   public showTx: boolean;
   public txHash: string;
 
-  constructor(private _ownerService: OwnerService, private service: EthcontractService) { }
+  constructor(private _ownerService: OwnerService,
+              private service: EthcontractService) {
+  }
 
   ngOnInit() {
     this.service.showAccount().then(result => this.yourAddr = result);
@@ -40,6 +42,14 @@ export class OwnerComponent implements OnInit {
       );
   }
 
+  addAdmin() {
+    this._ownerService.addAdmin('')
+    //return this.http.post<any>(this.service.addAd, user);
+  }
+
+  removeAdmin() {
+
+  }
 
   showMessageFalse() {
     this.showMessage = false;

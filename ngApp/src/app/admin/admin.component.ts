@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EthcontractService } from '../ethcontract.service';
+import { EthcontractService } from '../services/ethcontract/ethcontract.service';
 
 @Component({
   selector: 'app-admin',

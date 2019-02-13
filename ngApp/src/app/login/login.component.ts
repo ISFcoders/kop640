@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService} from "../auth.service";
+import { AuthService } from "../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -20,29 +20,16 @@ export class LoginComponent implements OnInit {
 
   loginUser() {
     this.invalidLoginOrPassword = false;
-    console.log(this.loginUserData);
+    console.log('login.component.ts: loginUser(): ' + this.loginUserData);
     this._auth.loginUser(this.loginUserData)
       .subscribe(
         res => {
           this.invalidLoginOrPassword = false;
+
           localStorage.setItem('token', res.token);
-
-          console.log('login:' + res.login);
-          localStorage.setItem('login', res.login);
-
-          console.log('admin:' + res.admin);
-          if (res.admin === 'true') {
-            localStorage.setItem('admin', res.admin);
-          } else {
-            localStorage.setItem('admin', '');
-          }
-
-          console.log('owner:' + res.owner);
-          if (res.owner === 'true') {
-            localStorage.setItem('owner', res.owner);
-          } else {
-            localStorage.setItem('owner', '');
-          }
+          localStorage.setItem('username', res.username);
+          localStorage.setItem('admin', (res.admin === 'true') ? res.admin : '');
+          localStorage.setItem('owner', (res.owner === 'true') ? res.owner : '');
 
           this._router.navigate(['/main']);
         },

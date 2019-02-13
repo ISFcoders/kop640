@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from "../user.service";
-import { EthcontractService } from '../ethcontract.service';
+import { UserService } from "../services/user.service";
+import { EthcontractService } from '../services/ethcontract/ethcontract.service';
 
 @Component({
   selector: 'app-user',
@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
   email = '';
   vallet = '';
   vallets = [ ];
-  login = '';
+  username = '';
   checked = false;
 
   constructor(private _userService: UserService, private service: EthcontractService) { }
@@ -52,13 +52,10 @@ export class UserComponent implements OnInit {
         // console.log(result);
         this.allOffersToBuy = result;
       });
-
-
-
     });
 
     this.user = {
-      login: localStorage.getItem('login')
+      username: localStorage.getItem('username')
     };
 
     this._userService.getUserInfo(this.user)
@@ -73,7 +70,7 @@ export class UserComponent implements OnInit {
           } else {
             this.checked = false;
           }
-          this.login = localStorage.getItem('login');
+          this.username = localStorage.getItem('username');
         },
         err => console.log(err)
       );

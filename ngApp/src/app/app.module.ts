@@ -10,13 +10,21 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { EventsComponent } from './events/events.component';
 import { SpecialEventsComponent } from './special-events/special-events.component';
-import { ConfigService } from "./config.service";
-import { AuthService } from "./auth.service";
-import { EventService } from "./event.service";
-import { UserService } from "./user.service";
-import { OwnerService } from "./owner.service";
-import { EthcontractService } from "./ethcontract.service";
-import { TokenInterceptorService } from "./token-interceptor.service";
+
+import { ConfigAuthService } from "./services/config/config.auth.service";
+import { ConfigEventService } from "./services/config/config.event.service";
+import { ConfigMainService } from "./services/config/config.main.service";
+import { ConfigOwnerService } from "./services/config/config.owner.service";
+import { ConfigUserService } from "./services/config/config.user.service";
+import { ConfigService } from "./services/config/config.service";
+import { AuthService } from "./services/auth.service";
+import { EventService } from "./services/event.service";
+import { UserService } from "./services/user.service";
+import { OwnerService } from "./services/owner.service";
+import { EthcontractService } from "./services/ethcontract/ethcontract.service";
+import { TokenInterceptorService } from "./services/token-interceptor.service";
+import { MainService } from "./services/main.service";
+
 import { MainComponent } from './main/main.component';
 import { UserComponent } from './user/user.component';
 import { AdminComponent } from './admin/admin.component';
@@ -42,7 +50,7 @@ import { OwnerComponent } from './owner/owner.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [AuthService, AuthGuard, EventService, UserService, OwnerService, EthcontractService, ConfigService,
+  providers: [ConfigAuthService, ConfigEventService, ConfigMainService, ConfigOwnerService, ConfigUserService, ConfigService, AuthService, AuthGuard, EventService, UserService, OwnerService, EthcontractService, MainService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,
