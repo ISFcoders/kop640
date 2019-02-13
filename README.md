@@ -1,28 +1,6 @@
-# Cooperative 6/40
+# kop640
+Cooperative 6/40. Frontend side.
 
-## Backend side
-##### server/   
-`$ cd server`  
-`$ node server`
-
-Configuration file: configs/server.json
-
-```
-{
-  "mongo": {
-    "url": "URL",
-    "port": "PORT",
-    "dbname": "DB_NAME",
-    "username": "USER_NAME",
-    "password": "PASSWORD"
-  },
-  "token": {
-    "secretkey": "SOME_SECRET_KEY_STRING"
-  }
-}
-```
-
-## Frontend side
 ##### ngApp/  
 `$ cd ngApp`    
 `$ ng serve` 
