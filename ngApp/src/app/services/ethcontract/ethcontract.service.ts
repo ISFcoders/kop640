@@ -4,26 +4,22 @@ import * as Web3 from 'web3';
 declare let require: any;
 declare let window: any;
 
-const contractAbi = require('./contractAbi02.json');
+const contractAbi = require('./abi/contractAbi03.json');
 
 @Injectable()
 export class EthcontractService {
   private _account: string = null;
   private _web3: any;
   private _tokenContract: any;
-  private _tokenContractAddress = '0xfcbb10fbc7c0a6ef80abc6bd674ae0254fe3972f';
+  private _tokenContractAddress = '0x401157C4DA67cf16841549e4D0794F7F67bc8a4f';
   private _transactionCount: number;
   private _encodeABI: string;
   private _dataTransfer: any;
 
   constructor() {
-    console.log('web3:');
     if (typeof window.web3 !== 'undefined') {
-      console.log('web3 -1');
       this._web3 = new Web3 (window.web3.currentProvider);
-
     } else {
-      console.log('web3 -2');
       this._web3 = new Web3 (new Web3.providers.HttpProvider('http://127.0.0.1:3001'));
     }
 
