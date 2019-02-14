@@ -1,5 +1,5 @@
 # kop640
-Cooperative 6/40. Frontend side.
+Cooperative 6/40 frontend side
 
 ##### ngApp/  
 `$ cd ngApp`    
